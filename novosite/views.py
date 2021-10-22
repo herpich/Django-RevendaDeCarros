@@ -1,10 +1,20 @@
 from django.shortcuts import render, redirect
 from novosite.forms import CarrosForm
 from novosite.models import Carros
+from django.core.paginator import Paginator
 
 def home(request):
     dados = {}
-    dados['db'] = Carros.objects.all()
+    search = request.GET.get('search')
+    if search:
+        dados['db'] = Carros.objects.filter(modelo__icontains=search)
+    else:
+        dados['db'] = Carros.objects.all()
+
+    #all = Carros.objects.all()
+    #paginator = Paginator(all, 4)
+    #pages = request.GET.get('page')
+    #dados['db'] = paginator.get_page(pages)
     return render(request, 'index.html', dados)
 
 def form(request):
